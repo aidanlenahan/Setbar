@@ -1,4 +1,20 @@
-# Workout Tracker – Build To-Do List
+# todo
+
+- make exercises clickable with description and such
+- editable shortcuts for each exercise
+- scaling on desktop
+- scaling on mobile
+- how many exercises on each page
+  - sort by body part
+  - sort by difficulty
+  - search by shortcut functionality
+  - search by category
+  - filter by category
+- home
+  - remove workout func
+
+
+
 
 ## 0) Project Foundation
 - Choose project name

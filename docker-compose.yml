@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: nessfitness-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./data:/app/data
+    environment:
+      - DATABASE_URL=sqlite:///./data/nessfitness.db
+      - CORS_ORIGINS=http://localhost:3000
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: nessfitness-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  data:

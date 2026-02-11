@@ -1,0 +1,142 @@
+[
+  {
+    "name": "Squat (Barbell)",
+    "shortcut": "sq",
+    "category": "legs",
+    "equipment": "barbell",
+    "description": "Back squat with barbell"
+  },
+  {
+    "name": "Bench Press",
+    "shortcut": "bp",
+    "category": "chest",
+    "equipment": "barbell",
+    "description": "Flat barbell bench press"
+  },
+  {
+    "name": "Deadlift",
+    "shortcut": "dl",
+    "category": "back",
+    "equipment": "barbell",
+    "description": "Conventional deadlift"
+  },
+  {
+    "name": "Overhead Press",
+    "shortcut": "ohp",
+    "category": "shoulders",
+    "equipment": "barbell",
+    "description": "Standing barbell overhead press"
+  },
+  {
+    "name": "Barbell Row",
+    "shortcut": "row",
+    "category": "back",
+    "equipment": "barbell",
+    "description": "Bent-over barbell row"
+  },
+  {
+    "name": "Pull-up",
+    "shortcut": "pu",
+    "category": "back",
+    "equipment": "bodyweight",
+    "description": "Bodyweight pull-up"
+  },
+  {
+    "name": "Dip",
+    "shortcut": "dip",
+    "category": "chest",
+    "equipment": "bodyweight",
+    "description": "Parallel bar dips"
+  },
+  {
+    "name": "Front Squat",
+    "shortcut": "fsq",
+    "category": "legs",
+    "equipment": "barbell",
+    "description": "Front squat with barbell"
+  },
+  {
+    "name": "Romanian Deadlift",
+    "shortcut": "rdl",
+    "category": "back",
+    "equipment": "barbell",
+    "description": "Romanian deadlift"
+  },
+  {
+    "name": "Dumbbell Bench Press",
+    "shortcut": "dbbp",
+    "category": "chest",
+    "equipment": "dumbbell",
+    "description": "Flat dumbbell bench press"
+  },
+  {
+    "name": "Leg Press",
+    "shortcut": "lp",
+    "category": "legs",
+    "equipment": "machine",
+    "description": "Machine leg press"
+  },
+  {
+    "name": "Lat Pulldown",
+    "shortcut": "lat",
+    "category": "back",
+    "equipment": "machine",
+    "description": "Lat pulldown machine"
+  },
+  {
+    "name": "Incline Bench Press",
+    "shortcut": "ibp",
+    "category": "chest",
+    "equipment": "barbell",
+    "description": "Incline barbell bench press"
+  },
+  {
+    "name": "Lunges",
+    "shortcut": "lunge",
+    "category": "legs",
+    "equipment": "bodyweight",
+    "description": "Walking or standing lunges"
+  },
+  {
+    "name": "Bicep Curl",
+    "shortcut": "curl",
+    "category": "arms",
+    "equipment": "dumbbell",
+    "description": "Dumbbell bicep curls"
+  },
+  {
+    "name": "Tricep Extension",
+    "shortcut": "tri",
+    "category": "arms",
+    "equipment": "dumbbell",
+    "description": "Overhead tricep extension"
+  },
+  {
+    "name": "Leg Curl",
+    "shortcut": "lc",
+    "category": "legs",
+    "equipment": "machine",
+    "description": "Lying or seated leg curl"
+  },
+  {
+    "name": "Leg Extension",
+    "shortcut": "le",
+    "category": "legs",
+    "equipment": "machine",
+    "description": "Leg extension machine"
+  },
+  {
+    "name": "Calf Raise",
+    "shortcut": "calf",
+    "category": "legs",
+    "equipment": "machine",
+    "description": "Standing or seated calf raise"
+  },
+  {
+    "name": "Face Pull",
+    "shortcut": "fp",
+    "category": "shoulders",
+    "equipment": "cable",
+    "description": "Cable face pulls"
+  }
+]

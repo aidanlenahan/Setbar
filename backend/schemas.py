@@ -1,0 +1,65 @@
+from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime
+
+# Exercise schemas
+class ExerciseBase(BaseModel):
+    name: str
+    shortcut: Optional[str] = None
+    category: Optional[str] = None
+    equipment: Optional[str] = None
+    description: Optional[str] = None
+
+class ExerciseResponse(ExerciseBase):
+    id: int
+    is_default: bool
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+# Workout schemas
+class WorkoutCreate(BaseModel):
+    name: Optional[str] = None
+    notes: Optional[str] = None
+
+class WorkoutResponse(BaseModel):
+    id: int
+    user_id: Optional[int] = None
+    name: Optional[str] = None
+    notes: Optional[str] = None
+    started_at: Optional[datetime] = None
+    completed_at: Optional[datetime] = None
+    duration_minutes: Optional[int] = None
+    
+    class Config:
+        from_attributes = True
+
+# Set schemas
+class SetCreate(BaseModel):
+    exercise_id: int
+    weight: Optional[float] = None
+    reps: Optional[int] = None
+    set_number: int = 1
+    rpe: Optional[float] = None
+    notes: Optional[str] = None
+    tags: Optional[str] = None
+
+class SetResponse(BaseModel):
+    id: int
+    workout_id: int
+    exercise_id: int
+    set_number: int
+    weight: Optional[float] = None
+    reps: Optional[int] = None
+    rpe: Optional[float] = None
+    notes: Optional[str] = None
+    tags: Optional[str] = None
+    completed_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+# Quick entry schema
+class QuickEntryCreate(BaseModel):
+    entry: str  # e.g., "sq 225 3x5 !hard" or "bp 135 5x5"
