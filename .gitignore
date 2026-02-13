@@ -46,6 +46,9 @@ docker-compose.override.yml
 # Logs
 *.log
 
+# Cloudflare
+cloudflared-diag-*.zip
+
 # OS
 .DS_Store
 Thumbs.db

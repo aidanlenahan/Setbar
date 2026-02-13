@@ -1,7 +1,8 @@
 .preferences-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(1.5rem, 3vw, 3rem) clamp(1rem, 4vw, 3rem);
 }
 
 .preferences-header {
@@ -177,6 +178,152 @@ input:checked + .toggle-slider:before {
   gap: 1rem;
   justify-content: flex-end;
   margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.custom-exercise-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.custom-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.custom-field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.custom-field label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.custom-field input,
+.custom-field select,
+.custom-field textarea {
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 1rem;
+  padding: 0.6rem 0.75rem;
+}
+
+.custom-field textarea {
+  resize: vertical;
+}
+
+.custom-error {
+  color: #ff7070;
+  margin: 0;
+}
+
+.custom-success {
+  color: #3fbb59;
+  margin: 0;
+}
+
+.custom-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.custom-exercise-list-section {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.custom-exercise-list-section h3 {
+  margin: 0 0 0.8rem;
+}
+
+.custom-list-empty {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.custom-exercise-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.custom-exercise-item {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.custom-exercise-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.custom-exercise-meta {
+  margin: 0.25rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.custom-item-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1200;
+}
+
+.custom-modal {
+  width: min(760px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.custom-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.custom-modal-header h3 {
+  margin: 0;
+}
+
+.custom-modal-close {
+  border: 1px solid var(--border-color);
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+}
+
+.btn-secondary.danger {
+  color: #ff6f6f;
+  border-color: #ff6f6f66;
 }
 
 .btn-primary,
@@ -261,6 +408,27 @@ body {
 
   .pref-actions {
     flex-direction: column;
+  }
+
+  .custom-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-actions {
+    justify-content: stretch;
+  }
+
+  .custom-exercise-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .custom-item-actions {
+    width: 100%;
+  }
+
+  .custom-modal {
+    padding: 0.9rem;
   }
 
   .btn-primary,

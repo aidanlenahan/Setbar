@@ -14,9 +14,26 @@ class ExerciseResponse(ExerciseBase):
     id: int
     is_default: bool
     created_at: datetime
+    instructions: Optional[list[str]] = None
     
     class Config:
         from_attributes = True
+
+class ExerciseShortcutUpdate(BaseModel):
+    shortcut: str
+
+class CustomExerciseCreate(BaseModel):
+    name: str
+    shortcut: str
+    category: str
+    equipment: str
+    difficulty: str
+    primary_muscles: list[str]
+    secondary_muscles: Optional[list[str]] = None
+    instructions: list[str]
+
+class CustomExerciseUpdate(CustomExerciseCreate):
+    pass
 
 # Workout schemas
 class WorkoutCreate(BaseModel):
@@ -63,3 +80,32 @@ class SetResponse(BaseModel):
 # Quick entry schema
 class QuickEntryCreate(BaseModel):
     entry: str  # e.g., "sq 225 3x5 !hard" or "bp 135 5x5"
+
+# Auth schemas
+class RegisterRequest(BaseModel):
+    email: str
+    username: str
+    password: str
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+class AuthResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user_id: int
+    email: str
+    name: str
+
+class UserProfileResponse(BaseModel):
+    id: int
+    email: str
+    name: str
+    is_email_verified: bool
+
+    class Config:
+        from_attributes = True
+
+class ProfileUpdateRequest(BaseModel):
+    username: str

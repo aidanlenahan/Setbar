@@ -1,29 +1,34 @@
 .app {
   min-height: 100vh;
   background: #0a0a0a;
+  width: 100%;
 }
 
 .navbar {
   background: #1a1a1a;
   border-bottom: 1px solid #333;
-  padding: 1rem 2rem;
+  padding: clamp(0.75rem, 2vw, 1.5rem) clamp(1rem, 4vw, 2.5rem);
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 100;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .nav-brand {
   font-size: 1.5rem;
   font-weight: 700;
   color: #fff;
+  letter-spacing: 0.02em;
 }
 
 .nav-links {
   display: flex;
-  gap: 2rem;
+  gap: 1.25rem;
+  flex-wrap: wrap;
 }
 
 .nav-links a {
@@ -37,13 +42,118 @@
   color: #646cff;
 }
 
+.nav-auth {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.nav-login-link {
+  color: #aaa;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-login-link:hover {
+  color: #646cff;
+}
+
+.nav-logout-btn {
+  color: #aaa;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.nav-logout-btn:hover {
+  color: #646cff;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-menu-trigger {
+  color: #aaa;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.user-menu-trigger:hover {
+  color: #646cff;
+}
+
+.user-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  background: #1f1f1f;
+  border: 1px solid #373737;
+  border-radius: 8px;
+  padding: 0.4rem;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+  z-index: 120;
+}
+
+.user-menu:hover .user-menu-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.user-menu-dropdown a,
+.user-menu-dropdown button {
+  color: #cfcfcf;
+  text-decoration: none;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 0.65rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.user-menu-dropdown a:hover,
+.user-menu-dropdown button:hover {
+  background: #2c2c2c;
+  color: #fff;
+}
+
 .main-content {
+  width: 100%;
   padding: 0;
 }
 
 .placeholder {
   text-align: center;
-  padding: 4rem 2rem;
+  padding: clamp(2rem, 4vw, 4rem) clamp(1.5rem, 4vw, 3rem);
   color: #888;
   font-size: 1.2rem;
+}
+
+@media (max-width: 720px) {
+  .navbar {
+    justify-content: center;
+    text-align: center;
+  }
 }

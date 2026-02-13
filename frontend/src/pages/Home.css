@@ -1,7 +1,7 @@
 .home {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  margin: 0;
+  padding: clamp(1.5rem, 3vw, 3rem) clamp(1rem, 4vw, 3rem);
 }
 
 .home h1 {
@@ -198,4 +198,10 @@
   color: #888;
   font-size: 0.9rem;
   flex-basis: 100%;
+}
+
+@media (max-width: 900px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 }
