@@ -9,7 +9,7 @@ from jose import jwt, JWTError
 from passlib.context import CryptContext
 
 from database import engine, get_db, Base
-from models import User, Exercise, Workout, Set
+from models import User, Exercise, Workout, Set, UserPreferences
 from schemas import (
     WorkoutCreate,
     WorkoutResponse,
@@ -24,6 +24,8 @@ from schemas import (
     ProfileUpdateRequest,
     CustomExerciseCreate,
     CustomExerciseUpdate,
+    PreferencesResponse,
+    PreferencesUpdateRequest,
 )
 from parser import QuickEntryParser
 
@@ -37,6 +39,16 @@ pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 SECRET_KEY = os.getenv("JWT_SECRET_KEY", "dev-only-change-me")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_SECONDS = int(os.getenv("JWT_EXPIRE_SECONDS", str(60 * 60 * 24 * 7)))
+
+DEFAULT_PREFERENCES = {
+    "dark_mode": True,
+    "default_entry_mode": "quick",
+    "weight_unit": "lbs",
+    "auto_save_workout": True,
+    "sound_effects": False,
+    "show_exercise_gifs": True,
+    "exercises_per_page": 50,
+}
 
 
 def normalize_email(email: str) -> str:
@@ -95,6 +107,30 @@ def ensure_user_auth_columns() -> None:
 
 
 ensure_user_auth_columns()
+
+
+def get_or_create_preferences(db: Session, user: User) -> UserPreferences:
+    prefs = db.query(UserPreferences).filter(UserPreferences.user_id == user.id).first()
+    if prefs:
+        return prefs
+
+    prefs = UserPreferences(user_id=user.id, **DEFAULT_PREFERENCES)
+    db.add(prefs)
+    db.commit()
+    db.refresh(prefs)
+    return prefs
+
+
+def preferences_to_response(prefs: UserPreferences) -> PreferencesResponse:
+    return PreferencesResponse(
+        darkMode=prefs.dark_mode,
+        defaultEntryMode=prefs.default_entry_mode,
+        weightUnit=prefs.weight_unit,
+        autoSaveWorkout=prefs.auto_save_workout,
+        soundEffects=prefs.sound_effects,
+        showExerciseGifs=prefs.show_exercise_gifs,
+        exercisesPerPage=prefs.exercises_per_page,
+    )
 
 # CORS - Allow all origins for development
 app.add_middleware(
@@ -193,6 +229,52 @@ def update_profile(
     db.commit()
     db.refresh(current_user)
     return current_user
+
+
+@app.get("/api/preferences", response_model=PreferencesResponse)
+def get_preferences(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    prefs = get_or_create_preferences(db, current_user)
+    return preferences_to_response(prefs)
+
+
+@app.put("/api/preferences", response_model=PreferencesResponse)
+def update_preferences(
+    payload: PreferencesUpdateRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    prefs = get_or_create_preferences(db, current_user)
+
+    if payload.defaultEntryMode is not None:
+        if payload.defaultEntryMode not in {"form", "quick"}:
+            raise HTTPException(status_code=400, detail="Invalid default entry mode")
+        prefs.default_entry_mode = payload.defaultEntryMode
+
+    if payload.weightUnit is not None:
+        if payload.weightUnit not in {"lbs", "kg"}:
+            raise HTTPException(status_code=400, detail="Invalid weight unit")
+        prefs.weight_unit = payload.weightUnit
+
+    if payload.exercisesPerPage is not None:
+        if payload.exercisesPerPage not in {25, 50, 100}:
+            raise HTTPException(status_code=400, detail="Invalid exercises per page")
+        prefs.exercises_per_page = payload.exercisesPerPage
+
+    if payload.darkMode is not None:
+        prefs.dark_mode = payload.darkMode
+
+    if payload.autoSaveWorkout is not None:
+        prefs.auto_save_workout = payload.autoSaveWorkout
+
+    if payload.soundEffects is not None:
+        prefs.sound_effects = payload.soundEffects
+
+    if payload.showExerciseGifs is not None:
+        prefs.show_exercise_gifs = payload.showExerciseGifs
+
+    db.commit()
+    db.refresh(prefs)
+    return preferences_to_response(prefs)
 
 # Exercise endpoints
 

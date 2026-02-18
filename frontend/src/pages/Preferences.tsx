@@ -9,6 +9,7 @@ interface PreferencesData {
   autoSaveWorkout: boolean
   soundEffects: boolean
   showExerciseGifs: boolean
+  exercisesPerPage: number
 }
 
 interface CustomExercise {
@@ -30,11 +31,13 @@ const DEFAULT_PREFERENCES: PreferencesData = {
   autoSaveWorkout: true,
   soundEffects: false,
   showExerciseGifs: true,
+  exercisesPerPage: 50,
 }
 
 export default function Preferences() {
   const [preferences, setPreferences] = useState<PreferencesData>(DEFAULT_PREFERENCES)
   const [saved, setSaved] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => !!localStorage.getItem('auth_token'))
   const [muscleOptions, setMuscleOptions] = useState<string[]>([])
   const [categoryOptions, setCategoryOptions] = useState<string[]>([])
   const [equipmentOptions, setEquipmentOptions] = useState<string[]>([])
@@ -69,25 +72,47 @@ export default function Preferences() {
   })
 
   useEffect(() => {
-    // Load preferences from localStorage
-    const stored = localStorage.getItem('nessfitness-preferences')
-    if (stored) {
-      try {
-        setPreferences({ ...DEFAULT_PREFERENCES, ...JSON.parse(stored) })
-      } catch (err) {
-        console.error('Failed to parse preferences:', err)
-      }
+    const syncAuthState = () => {
+      setIsAuthenticated(!!localStorage.getItem('auth_token'))
+    }
+
+    syncAuthState()
+    window.addEventListener('storage', syncAuthState)
+    window.addEventListener('auth-changed', syncAuthState)
+
+    return () => {
+      window.removeEventListener('storage', syncAuthState)
+      window.removeEventListener('auth-changed', syncAuthState)
     }
   }, [])
 
   useEffect(() => {
-    // Apply dark mode
-    if (preferences.darkMode) {
-      document.body.classList.add('dark-mode')
-    } else {
-      document.body.classList.remove('dark-mode')
+    const loadPreferences = async () => {
+      if (isAuthenticated) {
+        try {
+          const response = await axios.get('/api/preferences')
+          const nextPrefs = { ...DEFAULT_PREFERENCES, ...response.data }
+          setPreferences(nextPrefs)
+          localStorage.setItem('nessfitness-preferences', JSON.stringify(nextPrefs))
+          window.dispatchEvent(new Event('preferences-changed'))
+          return
+        } catch (err) {
+          console.error('Failed to load preferences:', err)
+        }
+      }
+
+      const stored = localStorage.getItem('nessfitness-preferences')
+      if (stored) {
+        try {
+          setPreferences({ ...DEFAULT_PREFERENCES, ...JSON.parse(stored) })
+        } catch (err) {
+          console.error('Failed to parse preferences:', err)
+        }
+      }
     }
-  }, [preferences.darkMode])
+
+    loadPreferences()
+  }, [isAuthenticated])
 
   useEffect(() => {
     const loadExerciseOptions = async () => {
@@ -158,17 +183,41 @@ export default function Preferences() {
     return value === 'beginner' || value === 'intermediate' || value === 'expert' ? value : 'intermediate'
   }
 
-  const handleSave = () => {
-    localStorage.setItem('nessfitness-preferences', JSON.stringify(preferences))
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+  const handleSave = async () => {
+    try {
+      if (isAuthenticated) {
+        const response = await axios.put('/api/preferences', preferences)
+        localStorage.setItem('nessfitness-preferences', JSON.stringify(response.data))
+      } else {
+        localStorage.setItem('nessfitness-preferences', JSON.stringify(preferences))
+      }
+
+      window.dispatchEvent(new Event('preferences-changed'))
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } catch (err) {
+      console.error('Failed to save preferences:', err)
+    }
   }
 
-  const handleReset = () => {
-    setPreferences(DEFAULT_PREFERENCES)
-    localStorage.removeItem('nessfitness-preferences')
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+  const handleReset = async () => {
+    const nextPrefs = { ...DEFAULT_PREFERENCES }
+    setPreferences(nextPrefs)
+
+    try {
+      if (isAuthenticated) {
+        const response = await axios.put('/api/preferences', nextPrefs)
+        localStorage.setItem('nessfitness-preferences', JSON.stringify(response.data))
+      } else {
+        localStorage.setItem('nessfitness-preferences', JSON.stringify(nextPrefs))
+      }
+
+      window.dispatchEvent(new Event('preferences-changed'))
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } catch (err) {
+      console.error('Failed to reset preferences:', err)
+    }
   }
 
   const updatePreference = <K extends keyof PreferencesData>(
@@ -300,14 +349,14 @@ export default function Preferences() {
   return (
     <div className="preferences-container">
       <header className="preferences-header">
-        <h1>⚙️ Preferences</h1>
+        <h1>Preferences</h1>
         <p>Customize your NessFitness experience</p>
       </header>
 
       <div className="preferences-content">
         {/* Appearance Section */}
         <section className="pref-section">
-          <h2>🎨 Appearance</h2>
+          <h2>Appearance</h2>
           
           <div className="pref-item">
             <div className="pref-info">
@@ -344,7 +393,7 @@ export default function Preferences() {
 
         {/* Workout Section */}
         <section className="pref-section">
-          <h2>🏋️ Workout</h2>
+          <h2>Workout</h2>
           
           <div className="pref-item">
             <div className="pref-info">
@@ -393,11 +442,28 @@ export default function Preferences() {
               <span className="toggle-slider"></span>
             </label>
           </div>
+
+          <div className="pref-item">
+            <div className="pref-info">
+              <label htmlFor="exercisesPerPage">Default exercises per page</label>
+              <p className="pref-description">Choose how many exercises show per page by default</p>
+            </div>
+            <select
+              id="exercisesPerPage"
+              className="pref-select"
+              value={preferences.exercisesPerPage}
+              onChange={(e) => updatePreference('exercisesPerPage', Number(e.target.value))}
+            >
+              {[25, 50, 100].map((size) => (
+                <option key={size} value={size}>{size}</option>
+              ))}
+            </select>
+          </div>
         </section>
 
         {/* Sound Section */}
         <section className="pref-section">
-          <h2>🔊 Sound</h2>
+          <h2>Sound</h2>
           
           <div className="pref-item">
             <div className="pref-info">
@@ -417,7 +483,7 @@ export default function Preferences() {
         </section>
 
         <section className="pref-section">
-          <h2>➕ Custom Exercise</h2>
+          <h2>Custom Exercise</h2>
           <form className="custom-exercise-form" onSubmit={handleCreateCustomExercise}>
             <div className="custom-form-grid">
               <div className="custom-field">
@@ -551,7 +617,7 @@ export default function Preferences() {
                     <div className="custom-exercise-main">
                       <p className="custom-exercise-title">{exercise.name}</p>
                       <p className="custom-exercise-meta">
-                        {exercise.shortcut} • {exercise.category} • {exercise.equipment}
+                        {exercise.shortcut} | {exercise.category} | {exercise.equipment}
                       </p>
                     </div>
                     <div className="custom-item-actions">
@@ -571,7 +637,7 @@ export default function Preferences() {
 
         {/* Attribution Section */}
         <section className="pref-section attribution-section">
-          <h2>ℹ️ About</h2>
+          <h2>About</h2>
           <div className="attribution-box">
             <p>
               <strong>NessFitness</strong> v1.0.0
@@ -595,7 +661,7 @@ export default function Preferences() {
             Reset to Defaults
           </button>
           <button onClick={handleSave} className="btn-primary">
-            {saved ? '✓ Saved!' : 'Save Preferences'}
+            {saved ? 'Saved' : 'Save Preferences'}
           </button>
         </div>
       </div>

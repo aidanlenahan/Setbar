@@ -40,6 +40,79 @@
   font-size: 1rem;
 }
 
+.exercise-search-input {
+  margin-bottom: 0;
+}
+
+.exercise-search-wrapper {
+  position: relative;
+}
+
+.exercise-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.5rem;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: 20;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.exercise-option {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: #1f1f1f;
+  color: #f2f2f2;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.exercise-option:hover {
+  border-color: #646cff;
+}
+
+.exercise-option.selected {
+  border-color: #646cff;
+  background: #2b2f55;
+}
+
+.exercise-option.empty {
+  cursor: default;
+  color: #aaa;
+  background: transparent;
+  border-color: transparent;
+}
+
+.exercise-option-name {
+  font-weight: 500;
+}
+
+.exercise-option-shortcut {
+  color: #aaa;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.selected-exercise {
+  margin-top: 0.5rem;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
 .form-group input:focus,
 .form-group select:focus {
   outline: none;

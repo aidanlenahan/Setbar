@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true,
-    allowedHosts: ["loch.aidanlenahan.com"],
+    allowedHosts: ["loch.aidanlenahan.com", "ness.aidanlenahan.com"],
     proxy: {
       '/api': {
         target: 'http://localhost:8000',

@@ -16,6 +16,25 @@ class User(Base):
     
     # Relationships
     workouts = relationship("Workout", back_populates="user", cascade="all, delete-orphan")
+    preferences = relationship("UserPreferences", back_populates="user", uselist=False, cascade="all, delete-orphan")
+
+
+class UserPreferences(Base):
+    __tablename__ = "user_preferences"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
+    dark_mode = Column(Boolean, default=True)
+    default_entry_mode = Column(String, default="quick")
+    weight_unit = Column(String, default="lbs")
+    auto_save_workout = Column(Boolean, default=True)
+    sound_effects = Column(Boolean, default=False)
+    show_exercise_gifs = Column(Boolean, default=True)
+    exercises_per_page = Column(Integer, default=50)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship("User", back_populates="preferences")
 
 class Exercise(Base):
     __tablename__ = "exercises"

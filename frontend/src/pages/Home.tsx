@@ -17,7 +17,7 @@ interface WorkoutSet {
   notes: string
 }
 
-function Home() {
+function Track() {
   const [exercises, setExercises] = useState<Exercise[]>([])
   const [todaySets, setTodaySets] = useState<WorkoutSet[]>([])
   const [workoutId, setWorkoutId] = useState<number | null>(null)
@@ -25,6 +25,8 @@ function Home() {
   
   // Form mode state
   const [selectedExercise, setSelectedExercise] = useState<number | null>(null)
+  const [exerciseSearch, setExerciseSearch] = useState('')
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [weight, setWeight] = useState('')
   const [reps, setReps] = useState('')
   const [sets, setSets] = useState('1')
@@ -35,43 +37,62 @@ function Home() {
   const [quickEntryError, setQuickEntryError] = useState('')
 
   useEffect(() => {
-    fetchExercises()
     fetchTodayWorkout()
   }, [])
 
-  const fetchExercises = async () => {
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      fetchExercises(exerciseSearch)
+    }, 250)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [exerciseSearch])
+
+  const fetchExercises = async (searchTerm = '') => {
     try {
-      console.log('🔄 Fetching exercises for dropdown...')
-      const response = await axios.get('/api/exercises/list?limit=100')
-      console.log(`✅ Fetched ${response.data.length} exercises`)
-      setExercises(response.data)
+      console.log('Fetching exercises for dropdown...')
+      const params = new URLSearchParams({
+        skip: '0',
+        limit: '100',
+        sort_by: 'name',
+        sort_order: 'asc',
+      })
+
+      if (searchTerm.trim()) {
+        params.set('search', searchTerm.trim())
+      }
+
+      const response = await axios.get(`/api/exercises?${params.toString()}`)
+      const results = Array.isArray(response.data?.exercises) ? response.data.exercises : []
+      console.log(`Fetched ${results.length} exercises`)
+      setExercises(results)
     } catch (err) {
-      console.error('❌ Failed to fetch exercises:', err)
+      console.error('Failed to fetch exercises:', err)
       setError('Failed to load exercises')
     }
   }
 
   const fetchTodayWorkout = async () => {
     try {
-      console.log('🔄 Fetching today\'s workout...')
+      console.log('Fetching today\'s workout...')
       const response = await axios.get('/api/workouts/today')
-      console.log('✅ Workout fetched:', response.data)
+      console.log('Workout fetched:', response.data)
       setWorkoutId(response.data.id)
       fetchTodaySets(response.data.id)
     } catch (err) {
-      console.error('❌ Failed to fetch today\'s workout:', err)
+      console.error('Failed to fetch today\'s workout:', err)
       setError('Failed to load today\'s workout')
     }
   }
 
   const fetchTodaySets = async (wId: number) => {
     try {
-      console.log(`🔄 Fetching sets for workout ${wId}...`)
+      console.log(`Fetching sets for workout ${wId}...`)
       const response = await axios.get(`/api/workouts/${wId}/sets`)
-      console.log(`✅ Fetched ${response.data.length} sets`)
+      console.log(`Fetched ${response.data.length} sets`)
       setTodaySets(response.data)
     } catch (err) {
-      console.error('❌ Failed to fetch sets:', err)
+      console.error('Failed to fetch sets:', err)
     }
   }
 
@@ -129,9 +150,11 @@ function Home() {
     return ex ? ex.name : 'Unknown'
   }
 
+  const selectedExerciseName = selectedExercise ? getExerciseName(selectedExercise) : ''
+
   return (
     <div className="home">
-      <h1>🏋️ Log Workout</h1>
+      <h1>Track Workout</h1>
       
       <div className="mode-toggle">
         <button 
@@ -152,17 +175,54 @@ function Home() {
         <div className="workout-form">
           <div className="form-group">
             <label>Exercise</label>
-            <select 
-              value={selectedExercise || ''} 
-              onChange={(e) => setSelectedExercise(Number(e.target.value))}
-            >
-              <option value="">Select an exercise...</option>
-              {exercises.map((ex) => (
-                <option key={ex.id} value={ex.id}>
-                  {ex.name} ({ex.shortcut})
-                </option>
-              ))}
-            </select>
+            <div className="exercise-search-wrapper">
+              <input
+                type="text"
+                value={exerciseSearch}
+                onChange={(e) => {
+                  const nextValue = e.target.value
+                  setExerciseSearch(nextValue)
+                  setSelectedExercise(null)
+                  setIsDropdownOpen(Boolean(nextValue.trim()))
+                }}
+                onFocus={() => {
+                  if (exerciseSearch.trim()) {
+                    setIsDropdownOpen(true)
+                  }
+                }}
+                onBlur={() => {
+                  window.setTimeout(() => setIsDropdownOpen(false), 150)
+                }}
+                placeholder="Search by name or shortcut"
+                className="exercise-search-input"
+              />
+              {isDropdownOpen && (
+                <div className="exercise-dropdown" role="listbox" aria-label="Exercise options">
+                  {exercises.length === 0 ? (
+                    <div className="exercise-option empty">No matches found</div>
+                  ) : (
+                    exercises.map((ex) => (
+                      <button
+                        key={ex.id}
+                        type="button"
+                        className={`exercise-option${selectedExercise === ex.id ? ' selected' : ''}`}
+                        onClick={() => {
+                          setSelectedExercise(ex.id)
+                          setExerciseSearch(ex.name)
+                          setIsDropdownOpen(false)
+                        }}
+                      >
+                        <span className="exercise-option-name">{ex.name}</span>
+                        {ex.shortcut && <span className="exercise-option-shortcut">{ex.shortcut}</span>}
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+            {selectedExerciseName && (
+              <div className="selected-exercise">Selected: {selectedExerciseName}</div>
+            )}
           </div>
 
           <div className="form-row">
@@ -269,7 +329,7 @@ function Home() {
               <div key={set.id} className="set-item">
                 <span className="exercise-name">{getExerciseName(set.exercise_id)}</span>
                 <span className="set-details">
-                  {set.weight} lbs × {set.reps} reps
+                  {set.weight} lbs x {set.reps} reps
                 </span>
                 {set.notes && <span className="set-notes">{set.notes}</span>}
               </div>
@@ -281,4 +341,4 @@ function Home() {
   )
 }
 
-export default Home
+export default Track

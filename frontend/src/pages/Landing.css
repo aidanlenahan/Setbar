@@ -1,0 +1,169 @@
+.landing {
+  width: 100%;
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(1.25rem, 4vw, 3.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.landing-hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  align-items: center;
+}
+
+.landing-hero-content {
+  background: #151515;
+  border: 1px solid #2f2f2f;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.landing-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  color: #9aa0a6;
+  margin: 0 0 1rem 0;
+}
+
+.landing-hero h1 {
+  margin: 0 0 1rem 0;
+  font-size: clamp(2.2rem, 4vw, 3rem);
+}
+
+.landing-subtitle {
+  margin: 0 0 1.75rem 0;
+  color: #c2c2c2;
+  line-height: 1.6;
+}
+
+.landing-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.landing .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1.4rem;
+  border-radius: 6px;
+  border: 1px solid #424242;
+  background: transparent;
+  color: #d0d0d0;
+  text-decoration: none;
+  font-weight: 600;
+  flex: 1;
+}
+
+.landing .btn-secondary:hover {
+  border-color: #646cff;
+  color: #fff;
+}
+
+.landing .btn-primary {
+  flex: 1;
+}
+
+.landing-hero-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.hero-panel-card {
+  background: #1c1c1c;
+  border: 1px solid #2f2f2f;
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+
+.hero-panel-card.muted {
+  background: #171717;
+  color: #b6b6b6;
+}
+
+.hero-panel-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.metric-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  display: block;
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9aa0a6;
+}
+
+.landing-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.feature-card {
+  background: #1a1a1a;
+  border: 1px solid #2f2f2f;
+  border-radius: 12px;
+  padding: 1.5rem;
+  min-height: 140px;
+}
+
+.feature-card h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.2rem;
+}
+
+.feature-card p {
+  margin: 0;
+  color: #b8b8b8;
+  line-height: 1.5;
+}
+
+.landing-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 200;
+}
+
+.landing-modal {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+}
+
+.landing-modal h2 {
+  margin-top: 0;
+}
+
+.landing-modal p {
+  color: #c2c2c2;
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}

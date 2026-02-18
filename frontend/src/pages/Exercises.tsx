@@ -25,6 +25,20 @@ interface ExerciseFilterOptions {
   sort_order: string[]
 }
 
+const DEFAULT_PAGE_SIZE = 50
+
+const getStoredPageSize = () => {
+  try {
+    const raw = localStorage.getItem('nessfitness-preferences')
+    if (!raw) return DEFAULT_PAGE_SIZE
+    const parsed = JSON.parse(raw)
+    const value = Number(parsed.exercisesPerPage)
+    return Number.isFinite(value) && value > 0 ? value : DEFAULT_PAGE_SIZE
+  } catch {
+    return DEFAULT_PAGE_SIZE
+  }
+}
+
 function Exercises() {
   const [exercises, setExercises] = useState<Exercise[]>([])
   const [cardImageAvailability, setCardImageAvailability] = useState<Record<number, boolean>>({})
@@ -58,14 +72,28 @@ function Exercises() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
-  const pageSize = 50
+  const [pageSize, setPageSize] = useState(() => getStoredPageSize())
 
   useEffect(() => {
     fetchExercises()
-  }, [page, search, categoryFilter, equipmentFilter, bodyPartFilter, exerciseTypeFilter, difficultyFilter, sortBy, sortOrder])
+  }, [page, pageSize, search, categoryFilter, equipmentFilter, bodyPartFilter, exerciseTypeFilter, difficultyFilter, sortBy, sortOrder])
 
   useEffect(() => {
     fetchFilterOptions()
+  }, [])
+
+  useEffect(() => {
+    const handleStorage = () => {
+      setPageSize(getStoredPageSize())
+    }
+
+    window.addEventListener('storage', handleStorage)
+    window.addEventListener('preferences-changed', handleStorage)
+
+    return () => {
+      window.removeEventListener('storage', handleStorage)
+      window.removeEventListener('preferences-changed', handleStorage)
+    }
   }, [])
 
   useEffect(() => {
@@ -205,9 +233,9 @@ function Exercises() {
       const sortOrderParam = sortOrder ? `&sort_order=${encodeURIComponent(sortOrder)}` : ''
       const url = `/api/exercises?skip=${skip}&limit=${pageSize}${searchParam}${categoryParam}${equipmentParam}${bodyPartParam}${exerciseTypeParam}${difficultyParam}${sortByParam}${sortOrderParam}`
       
-      console.log('🔄 Fetching exercises from:', url)
+      console.log('Fetching exercises from:', url)
       const response = await axios.get(url)
-      console.log('✅ Response received:', {
+      console.log('Response received:', {
         total: response.data.total,
         exercises: response.data.exercises?.length || 0,
         status: response.status
@@ -219,9 +247,9 @@ function Exercises() {
       
       setExercises(response.data.exercises)
       setTotal(response.data.total || 0)
-      console.log('✅ State updated successfully')
+      console.log('State updated successfully')
     } catch (err: any) {
-      console.error('❌ Failed to fetch exercises:', {
+      console.error('Failed to fetch exercises:', {
         message: err.message,
         response: err.response?.data,
         status: err.response?.status
@@ -439,12 +467,50 @@ function Exercises() {
               </select>
             </div>
 
+            <div className="filter-item">
+              <label htmlFor="page-size">Per Page</label>
+              <select
+                id="page-size"
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value))
+                  setPage(1)
+                }}
+              >
+                {[25, 50, 100].map((size) => (
+                  <option key={size} value={size}>{size}</option>
+                ))}
+              </select>
+            </div>
+
             <div className="filter-actions">
               <button type="button" className="filter-reset-btn" onClick={resetFilters}>Reset</button>
             </div>
           </div>
         )}
       </div>
+
+      {totalPages > 1 && (
+        <div className="pagination pagination-top">
+          <button
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="pagination-btn"
+          >
+            Previous
+          </button>
+          <span className="pagination-info">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="pagination-btn"
+          >
+            Next
+          </button>
+        </div>
+      )}
       
       {loading && <p className="loading-message">Loading exercises...</p>}
       {error && <p className="error-message">{error}</p>}
@@ -494,7 +560,7 @@ function Exercises() {
             disabled={page === 1}
             className="pagination-btn"
           >
-            ← Previous
+            Previous
           </button>
           <span className="pagination-info">
             Page {page} of {totalPages}
@@ -504,7 +570,7 @@ function Exercises() {
             disabled={page === totalPages}
             className="pagination-btn"
           >
-            Next →
+            Next
           </button>
         </div>
       )}

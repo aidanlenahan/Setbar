@@ -15,17 +15,17 @@ DATASET_URL = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/d
 
 def download_full_dataset():
     """Download the complete exercise dataset from GitHub"""
-    print("🔄 Downloading full ExerciseDB dataset from GitHub...")
-    print(f"📍 URL: {DATASET_URL}")
+    print("Downloading full ExerciseDB dataset from GitHub...")
+    print(f"URL: {DATASET_URL}")
     
     try:
         response = requests.get(DATASET_URL, timeout=30)
         response.raise_for_status()
         exercises = response.json()
-        print(f"✅ Downloaded {len(exercises)} exercises!")
+        print(f"Downloaded {len(exercises)} exercises!")
         return exercises
     except requests.exceptions.RequestException as e:
-        print(f"❌ Error downloading dataset: {e}")
+        print(f"Error downloading dataset: {e}")
         return None
 
 def import_to_database(exercises_data):
@@ -36,7 +36,7 @@ def import_to_database(exercises_data):
     updated_count = 0
     
     try:
-        print(f"\n💾 Importing {len(exercises_data)} exercises to database...")
+        print(f"\nImporting {len(exercises_data)} exercises to database...")
         
         for ex_data in exercises_data:
             # ExerciseDB's free dataset structure is slightly different
@@ -50,7 +50,7 @@ def import_to_database(exercises_data):
             if existing:
                 skipped_count += 1
                 if skipped_count % 100 == 0:
-                    print(f"⏭️  Skipped {skipped_count} existing exercises...")
+                    print(f"Skipped {skipped_count} existing exercises...")
                 continue
             
             # Extract data with fallbacks for different JSON structures
@@ -92,16 +92,16 @@ def import_to_database(exercises_data):
             imported_count += 1
             
             if imported_count % 100 == 0:
-                print(f"💾 Imported {imported_count} exercises...")
+                print(f"Imported {imported_count} exercises...")
                 db.commit()
         
         db.commit()
-        print(f"\n✅ Import complete!")
-        print(f"   📥 Imported: {imported_count}")
-        print(f"   ⏭️  Skipped: {skipped_count}")
+        print("\nImport complete!")
+        print(f"   Imported: {imported_count}")
+        print(f"   Skipped: {skipped_count}")
         
     except Exception as e:
-        print(f"❌ Error during import: {e}")
+        print(f"Error during import: {e}")
         db.rollback()
         raise
     finally:
@@ -115,7 +115,7 @@ def show_stats():
         from_exercisedb = db.query(Exercise).filter(Exercise.exercisedb_id.isnot(None)).count()
         custom = total - from_exercisedb
         
-        print(f"\n📊 Database Statistics:")
+        print("\nDatabase Statistics:")
         print(f"   Total exercises: {total}")
         print(f"   From ExerciseDB: {from_exercisedb}")
         print(f"   Custom exercises: {custom}")
@@ -124,7 +124,7 @@ def show_stats():
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🏋️  ExerciseDB Full Dataset Importer")
+    print("ExerciseDB Full Dataset Importer")
     print("=" * 60)
     print("Attribution: ExerciseDB (https://exercisedb.dev)")
     print("License: AGPL v3")
@@ -142,7 +142,7 @@ if __name__ == "__main__":
         # Show statistics
         show_stats()
         
-        print("\n✅ Done! No rate limits - full dataset imported!")
+        print("\nDone! No rate limits - full dataset imported!")
     else:
-        print("❌ Failed to download dataset.")
-        print("💡 Try again or use import_exercisedb.py with API")
+        print("Failed to download dataset.")
+        print("Try again or use import_exercisedb.py with API")

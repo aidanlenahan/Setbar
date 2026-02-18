@@ -12,6 +12,9 @@
   - filter by category
 - home
   - remove workout func
+- trial mode
+  - before logging in, there is a trial mode that has a banner at the top warning user that it is trial mode and nothing will be saved. after user logs in, the message goes away, and user data is saved per account. 
+- workout planner/workout suggester based off of variables from exercise.json
 
 
 

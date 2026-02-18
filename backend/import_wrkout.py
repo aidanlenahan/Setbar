@@ -19,7 +19,7 @@ RAW_BASE = "https://raw.githubusercontent.com/wrkout/exercises.json/master"
 
 def get_exercise_directories():
     """Fetch list of all exercise directories from GitHub"""
-    print("🔄 Fetching exercise list from GitHub...")
+    print("Fetching exercise list from GitHub...")
     
     try:
         url = f"{GITHUB_API_BASE}/contents/exercises"
@@ -31,11 +31,11 @@ def get_exercise_directories():
             if item['type'] == 'dir'
         ]
         
-        print(f"✅ Found {len(directories)} exercises")
+        print(f"Found {len(directories)} exercises")
         return directories
         
     except requests.exceptions.RequestException as e:
-        print(f"❌ Error fetching exercise list: {e}")
+        print(f"Error fetching exercise list: {e}")
         return []
 
 def download_exercise(exercise_dir):
@@ -47,7 +47,7 @@ def download_exercise(exercise_dir):
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
-        print(f"⚠️  Failed to download {exercise_dir}: {e}")
+        print(f"Warning: Failed to download {exercise_dir}: {e}")
         return None
 
 def import_to_database(exercises_data):
@@ -67,7 +67,7 @@ def import_to_database(exercises_data):
             used_shortcuts.add(shortcut.lower())
     
     try:
-        print(f"\n💾 Importing {len(exercises_data)} exercises to database...")
+        print(f"\nImporting {len(exercises_data)} exercises to database...")
         
         for exercise_name, ex_data in exercises_data.items():
             if not ex_data:
@@ -83,7 +83,7 @@ def import_to_database(exercises_data):
                 if existing:
                     skipped_count += 1
                     if skipped_count % 50 == 0:
-                        print(f"⏭️  Skipped {skipped_count} existing exercises...")
+                        print(f"Skipped {skipped_count} existing exercises...")
                     continue
                 
                 # Map wrkout fields to our database structure
@@ -134,23 +134,23 @@ def import_to_database(exercises_data):
                 imported_count += 1
                 
                 if imported_count % 50 == 0:
-                    print(f"💾 Imported {imported_count} exercises...")
+                    print(f"Imported {imported_count} exercises...")
                     db.commit()
                     
             except Exception as e:
-                print(f"❌ Error importing {exercise_name}: {e}")
+                print(f"Error importing {exercise_name}: {e}")
                 error_count += 1
                 db.rollback()  # Roll back on error and continue
                 continue
         
         db.commit()
-        print(f"\n✅ Import complete!")
-        print(f"   📥 Imported: {imported_count}")
-        print(f"   ⏭️  Skipped: {skipped_count}")
-        print(f"   ❌ Errors: {error_count}")
+        print("\nImport complete!")
+        print(f"   Imported: {imported_count}")
+        print(f"   Skipped: {skipped_count}")
+        print(f"   Errors: {error_count}")
         
     except Exception as e:
-        print(f"❌ Critical error during import: {e}")
+        print(f"Critical error during import: {e}")
         db.rollback()
         raise
     finally:
@@ -167,7 +167,7 @@ def show_stats():
         ).count()
         custom = db.query(Exercise).filter(Exercise.is_default == False).count()
         
-        print(f"\n📊 Database Statistics:")
+        print("\nDatabase Statistics:")
         print(f"   Total exercises: {total}")
         print(f"   From wrkout: {from_wrkout}")
         print(f"   Custom exercises: {custom}")
@@ -177,7 +177,7 @@ def show_stats():
             Exercise.exercisedb_id.is_(None)
         ).first()
         if sample:
-            print(f"\n📝 Sample Exercise:")
+            print("\nSample Exercise:")
             print(f"   Name: {sample.name}")
             print(f"   Shortcut: {sample.shortcut}")
             print(f"   Equipment: {sample.equipment}")
@@ -189,13 +189,13 @@ def show_stats():
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🏋️  Wrkout Exercises.json Importer")
+    print("Wrkout Exercises.json Importer")
     print("=" * 60)
     print("Repository: https://github.com/wrkout/exercises.json")
     print("License: Public Domain (CC0)")
     print("=" * 60)
     print()
-    print("⚠️  This will download 873 exercises from GitHub.")
+    print("Note: This will download 873 exercises from GitHub.")
     print("   Takes ~2 minutes with rate limiting.")
     print()
     
@@ -203,11 +203,11 @@ if __name__ == "__main__":
     exercise_dirs = get_exercise_directories()
     
     if not exercise_dirs:
-        print("❌ No exercises found. Check your internet connection.")
+        print("No exercises found. Check your internet connection.")
         exit(1)
     
     # Download all exercises
-    print(f"\n📥 Downloading {len(exercise_dirs)} exercises...")
+    print(f"\nDownloading {len(exercise_dirs)} exercises...")
     exercises_data = {}
     
     for i, exercise_dir in enumerate(exercise_dirs, 1):
@@ -217,18 +217,18 @@ if __name__ == "__main__":
         
         # Progress indicator
         if i % 25 == 0:
-            print(f"📥 Downloaded {i}/{len(exercise_dirs)} exercises...")
+            print(f"Downloaded {i}/{len(exercise_dirs)} exercises...")
         
         # Rate limiting - raw.githubusercontent.com is not rate-limited like API
         time.sleep(0.1)
     
-    print(f"✅ Downloaded {len(exercises_data)} exercises successfully")
+    print(f"Downloaded {len(exercises_data)} exercises successfully")
     
     # Import to database
     if exercises_data:
         import_to_database(exercises_data)
         show_stats()
     
-    print("\n✅ Done!")
-    print("💡 Your exercises are now stored locally in the database.")
-    print("💡 No internet required for the app to work!")
+    print("\nDone!")
+    print("Your exercises are now stored locally in the database.")
+    print("No internet required for the app to work!")

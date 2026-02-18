@@ -109,3 +109,23 @@ class UserProfileResponse(BaseModel):
 
 class ProfileUpdateRequest(BaseModel):
     username: str
+
+
+class PreferencesResponse(BaseModel):
+    darkMode: bool
+    defaultEntryMode: str
+    weightUnit: str
+    autoSaveWorkout: bool
+    soundEffects: bool
+    showExerciseGifs: bool
+    exercisesPerPage: int
+
+
+class PreferencesUpdateRequest(BaseModel):
+    darkMode: Optional[bool] = None
+    defaultEntryMode: Optional[str] = None
+    weightUnit: Optional[str] = None
+    autoSaveWorkout: Optional[bool] = None
+    soundEffects: Optional[bool] = None
+    showExerciseGifs: Optional[bool] = None
+    exercisesPerPage: Optional[int] = None

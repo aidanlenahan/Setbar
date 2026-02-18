@@ -27,14 +27,14 @@ def fetch_all_exercises(limit=25, max_pages=None):
     offset = 0
     page = 1
     
-    print(f"🔄 Fetching exercises from ExerciseDB API...")
+    print("Fetching exercises from ExerciseDB API...")
     
     while True:
         if max_pages and page > max_pages:
             break
             
         url = f"{EXERCISEDB_BASE_URL}/exercises?offset={offset}&limit={limit}"
-        print(f"📥 Fetching page {page} (offset={offset}, limit={limit})...")
+        print(f"Fetching page {page} (offset={offset}, limit={limit})...")
         
         try:
             response = requests.get(url, timeout=10)
@@ -42,18 +42,18 @@ def fetch_all_exercises(limit=25, max_pages=None):
             data = response.json()
             
             if not data.get('success') or not data.get('data'):
-                print(f"❌ No more data available")
+                print("No more data available")
                 break
             
             page_exercises = data['data']
             exercises.extend(page_exercises)
             
-            print(f"✅ Fetched {len(page_exercises)} exercises (total: {len(exercises)})")
+            print(f"Fetched {len(page_exercises)} exercises (total: {len(exercises)})")
             
             # Check if we've reached the end
             metadata = data.get('metadata', {})
             if not metadata.get('nextPage'):
-                print(f"✅ Reached final page")
+                print("Reached final page")
                 break
             
             offset += limit
@@ -61,22 +61,22 @@ def fetch_all_exercises(limit=25, max_pages=None):
             
             # Be respectful - add longer delay to avoid rate limiting
             # ExerciseDB has rate limits, so we need to be patient
-            print(f"⏳ Waiting 3 seconds before next request...")
+            print("Waiting 3 seconds before next request...")
             time.sleep(3)
             
         except requests.exceptions.HTTPError as e:
             if e.response.status_code == 429:
-                print(f"⚠️  Rate limit hit! Please wait a few minutes before running again.")
-                print(f"✅ Successfully fetched {len(exercises)} exercises so far.")
+                print("Rate limit hit. Please wait a few minutes before running again.")
+                print(f"Successfully fetched {len(exercises)} exercises so far.")
                 break
             else:
-                print(f"❌ HTTP Error fetching page {page}: {e}")
+                print(f"HTTP Error fetching page {page}: {e}")
                 break
         except requests.exceptions.RequestException as e:
-            print(f"❌ Error fetching page {page}: {e}")
+            print(f"Error fetching page {page}: {e}")
             break
     
-    print(f"✅ Total exercises fetched: {len(exercises)}")
+    print(f"Total exercises fetched: {len(exercises)}")
     return exercises
 
 def import_to_database(exercises_data):
@@ -88,7 +88,7 @@ def import_to_database(exercises_data):
     skipped_count = 0
     
     try:
-        print(f"\n💾 Importing {len(exercises_data)} exercises to database...")
+        print(f"\nImporting {len(exercises_data)} exercises to database...")
         
         for ex_data in exercises_data:
             # Check if exercise already exists
@@ -97,7 +97,7 @@ def import_to_database(exercises_data):
             ).first()
             
             if existing:
-                print(f"⏭️  Skipping '{ex_data['name']}' (already exists)")
+                print(f"Skipping '{ex_data['name']}' (already exists)")
                 skipped_count += 1
                 continue
             
@@ -128,16 +128,16 @@ def import_to_database(exercises_data):
             imported_count += 1
             
             if imported_count % 50 == 0:
-                print(f"💾 Committed {imported_count} exercises...")
+                print(f"Committed {imported_count} exercises...")
                 db.commit()
         
         db.commit()
-        print(f"\n✅ Import complete!")
-        print(f"   📥 Imported: {imported_count}")
-        print(f"   ⏭️  Skipped: {skipped_count}")
+        print("\nImport complete!")
+        print(f"   Imported: {imported_count}")
+        print(f"   Skipped: {skipped_count}")
         
     except Exception as e:
-        print(f"❌ Error during import: {e}")
+        print(f"Error during import: {e}")
         db.rollback()
     finally:
         db.close()
@@ -150,7 +150,7 @@ def show_stats():
         from_exercisedb = db.query(Exercise).filter(Exercise.exercisedb_id.isnot(None)).count()
         custom = total - from_exercisedb
         
-        print(f"\n📊 Database Statistics:")
+        print("\nDatabase Statistics:")
         print(f"   Total exercises: {total}")
         print(f"   From ExerciseDB: {from_exercisedb}")
         print(f"   Custom exercises: {custom}")
@@ -159,13 +159,13 @@ def show_stats():
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🏋️  ExerciseDB Importer")
+    print("ExerciseDB Importer")
     print("=" * 60)
     print("Attribution: ExerciseDB (https://exercisedb.dev)")
     print("License: AGPL v3")
     print("=" * 60)
     print()
-    print("⚠️  Note: ExerciseDB has rate limits. Fetching 10 pages at a time.")
+    print("Note: ExerciseDB has rate limits. Fetching 10 pages at a time.")
     print("   If you hit rate limits, wait a few minutes and run again.")
     print()
     
@@ -179,7 +179,7 @@ if __name__ == "__main__":
         # Show statistics
         show_stats()
     else:
-        print("❌ No exercises fetched. Check your internet connection.")
+        print("No exercises fetched. Check your internet connection.")
     
-    print("\n✅ Done!")
-    print("💡 Tip: Run this script multiple times to import more exercises.")
+    print("\nDone!")
+    print("Tip: Run this script multiple times to import more exercises.")

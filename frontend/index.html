@@ -5,6 +5,21 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>frontend</title>
+    <script>
+      try {
+        const themeOverride = localStorage.getItem('theme_override') === 'true'
+        const rawPrefs = localStorage.getItem('nessfitness-preferences')
+        if (!themeOverride && rawPrefs) {
+          const prefs = JSON.parse(rawPrefs)
+          if (typeof prefs.darkMode === 'boolean') {
+            localStorage.setItem('theme', prefs.darkMode ? 'dark' : 'light')
+          }
+        }
+      } catch {
+        // Ignore preference parsing errors
+      }
+    </script>
+    <script src="/theme-switch.js"></script>
   </head>
   <body>
     <div id="root"></div>

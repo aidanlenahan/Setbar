@@ -16,7 +16,7 @@ export default function Login() {
   useEffect(() => {
     const token = localStorage.getItem('auth_token')
     if (token) {
-      navigate('/')
+      navigate('/track')
     }
   }, [navigate])
 
@@ -40,10 +40,13 @@ export default function Login() {
         email: response.data.email,
         name: response.data.name,
       }))
+      localStorage.removeItem('trial_mode')
+      localStorage.removeItem('trial_notice_dismissed')
       axios.defaults.headers.common.Authorization = `Bearer ${token}`
       window.dispatchEvent(new Event('auth-changed'))
+      window.dispatchEvent(new Event('trial-changed'))
 
-      navigate('/')
+      navigate('/track')
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Authentication failed')
     } finally {

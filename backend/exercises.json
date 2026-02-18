@@ -4,139 +4,159 @@
     "shortcut": "sq",
     "category": "legs",
     "equipment": "barbell",
-    "description": "Back squat with barbell"
+    "description": "Back squat with barbell",
+    "force": "legs"
   },
   {
     "name": "Bench Press",
     "shortcut": "bp",
     "category": "chest",
     "equipment": "barbell",
-    "description": "Flat barbell bench press"
+    "description": "Flat barbell bench press",
+    "force": "push"
   },
   {
     "name": "Deadlift",
     "shortcut": "dl",
     "category": "back",
     "equipment": "barbell",
-    "description": "Conventional deadlift"
+    "description": "Conventional deadlift",
+    "force": "pull"
   },
   {
     "name": "Overhead Press",
     "shortcut": "ohp",
     "category": "shoulders",
     "equipment": "barbell",
-    "description": "Standing barbell overhead press"
+    "description": "Standing barbell overhead press",
+    "force": "push"
   },
   {
     "name": "Barbell Row",
     "shortcut": "row",
     "category": "back",
     "equipment": "barbell",
-    "description": "Bent-over barbell row"
+    "description": "Bent-over barbell row",
+    "force": "pull"
   },
   {
     "name": "Pull-up",
     "shortcut": "pu",
     "category": "back",
     "equipment": "bodyweight",
-    "description": "Bodyweight pull-up"
+    "description": "Bodyweight pull-up",
+    "force": "pull"
   },
   {
     "name": "Dip",
     "shortcut": "dip",
     "category": "chest",
     "equipment": "bodyweight",
-    "description": "Parallel bar dips"
+    "description": "Parallel bar dips",
+    "force": "push"
   },
   {
     "name": "Front Squat",
     "shortcut": "fsq",
     "category": "legs",
     "equipment": "barbell",
-    "description": "Front squat with barbell"
+    "description": "Front squat with barbell",
+    "force": "legs"
   },
   {
     "name": "Romanian Deadlift",
     "shortcut": "rdl",
     "category": "back",
     "equipment": "barbell",
-    "description": "Romanian deadlift"
+    "description": "Romanian deadlift",
+    "force": "pull"
   },
   {
     "name": "Dumbbell Bench Press",
     "shortcut": "dbbp",
     "category": "chest",
     "equipment": "dumbbell",
-    "description": "Flat dumbbell bench press"
+    "description": "Flat dumbbell bench press",
+    "force": "push"
   },
   {
     "name": "Leg Press",
     "shortcut": "lp",
     "category": "legs",
     "equipment": "machine",
-    "description": "Machine leg press"
+    "description": "Machine leg press",
+    "force": "legs"
   },
   {
     "name": "Lat Pulldown",
     "shortcut": "lat",
     "category": "back",
     "equipment": "machine",
-    "description": "Lat pulldown machine"
+    "description": "Lat pulldown machine",
+    "force": "pull"
   },
   {
     "name": "Incline Bench Press",
     "shortcut": "ibp",
     "category": "chest",
     "equipment": "barbell",
-    "description": "Incline barbell bench press"
+    "description": "Incline barbell bench press",
+    "force": "push"
   },
   {
     "name": "Lunges",
     "shortcut": "lunge",
     "category": "legs",
     "equipment": "bodyweight",
-    "description": "Walking or standing lunges"
+    "description": "Walking or standing lunges",
+    "force": "legs"
   },
   {
     "name": "Bicep Curl",
     "shortcut": "curl",
     "category": "arms",
     "equipment": "dumbbell",
-    "description": "Dumbbell bicep curls"
+    "description": "Dumbbell bicep curls",
+    "force": "pull"
   },
   {
     "name": "Tricep Extension",
     "shortcut": "tri",
     "category": "arms",
     "equipment": "dumbbell",
-    "description": "Overhead tricep extension"
+    "description": "Overhead tricep extension",
+    "force": "push"
   },
   {
     "name": "Leg Curl",
     "shortcut": "lc",
     "category": "legs",
     "equipment": "machine",
-    "description": "Lying or seated leg curl"
+    "description": "Lying or seated leg curl",
+    "force": "legs"
   },
   {
     "name": "Leg Extension",
     "shortcut": "le",
     "category": "legs",
     "equipment": "machine",
-    "description": "Leg extension machine"
+    "description": "Leg extension machine",
+    "force": "legs"
   },
   {
     "name": "Calf Raise",
     "shortcut": "calf",
     "category": "legs",
     "equipment": "machine",
-    "description": "Standing or seated calf raise"
+    "description": "Standing or seated calf raise",
+    "force": "legs"
   },
   {
     "name": "Face Pull",
     "shortcut": "fp",
     "category": "shoulders",
     "equipment": "cable",
-    "description": "Cable face pulls"
+    "description": "Cable face pulls",
+    "force": "pull"
   }
 ]

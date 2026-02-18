@@ -15,10 +15,15 @@
   margin-bottom: 0.5rem;
 }
 
-.exercise-count {
+.exercises-header .exercise-count {
   color: var(--text-secondary);
   font-size: 1.1rem;
   margin: 0;
+  background: none;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  font-weight: normal;
 }
 
 /* Search Bar */
@@ -578,6 +583,22 @@
 .pagination-info {
   color: var(--text-secondary);
   font-weight: 600;
+}
+
+.pagination.pagination-top {
+  margin-top: 1.25rem;
+  padding: 0.5rem 0 0;
+  gap: 0.5rem;
+}
+
+.pagination.pagination-top .pagination-btn {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  border-width: 1px;
+}
+
+.pagination.pagination-top .pagination-info {
+  font-size: 0.85rem;
 }
 
 /* Responsive Design */
